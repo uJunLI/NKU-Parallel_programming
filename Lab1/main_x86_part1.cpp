@@ -7,16 +7,16 @@ const int N=10000;
 
 double b[N][N],a[N],sum[N];
 
-//³õÊ¼»¯
+//ï¿½ï¿½Ê¼ï¿½ï¿½
 void init(int n)
 {
     for(int i=0; i<N; i++)
     {
         for(int j=0; j<N; j++)
         {
-            b[i][j] = i+j;//³õÊ¼»¯¾ØÕó
+            b[i][j] = i+j;//ï¿½ï¿½Ê¼ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½
         }
-        a[i] = i;//³õÊ¼»¯ÏòÁ¿
+        a[i] = i;//ï¿½ï¿½Ê¼ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½
     }
 }
 
@@ -50,11 +50,31 @@ void f_pro(int n)
 
 }
 
+void f_unrolled(int n)
+{
+    for(int i = 0; i < n; i++)
+    {
+        sum[i] = 0.0;
+    }
+
+    // Assume n is a multiple of 4 for simplification
+    for(int i = 0; i < n; i += 4)
+    {
+        for(int j = 0; j < n; j++)
+        {
+            sum[j] += b[i][j] * a[i];
+            sum[j] += b[i+1][j] * a[i+1];
+            sum[j] += b[i+2][j] * a[i+2];
+            sum[j] += b[i+3][j] * a[i+3];
+        }
+    }
+}
+
 
 int main()
 {
     int n,step=100;
-    long long counter;// ¼ÇÂ¼´ÎÊý
+    long long counter;// ï¿½ï¿½Â¼ï¿½ï¿½ï¿½ï¿½
     double seconds ;
     long long head,tail,freq,noww;
     init(N);
@@ -62,7 +82,7 @@ int main()
     for(int n=0;n<=10000;n+=step)
     {
         QueryPerformanceFrequency((LARGE_INTEGER *)&freq);
-        QueryPerformanceCounter((LARGE_INTEGER *)&head);//¿ªÊ¼¼ÆÊ±
+        QueryPerformanceCounter((LARGE_INTEGER *)&head);//ï¿½ï¿½Ê¼ï¿½ï¿½Ê±
 
         counter=0;
         while(true)
@@ -70,14 +90,14 @@ int main()
             QueryPerformanceCounter((LARGE_INTEGER *)&noww);
             if( (noww-head)*1000.0/freq > 10)
                 break;
-            // f_ordinary(n);//Ö´ÐÐº¯Êý
+            // f_ordinary(n);//Ö´ï¿½Ðºï¿½ï¿½ï¿½
             f_pro(n);
             counter++;
         }
-        QueryPerformanceCounter((LARGE_INTEGER *)&tail );//½áÊø¼ÆÊ±
-        seconds = (tail - head) * 1000.0 / freq ;//µ¥Î» ms
+        QueryPerformanceCounter((LARGE_INTEGER *)&tail );//ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½Ê±
+        seconds = (tail - head) * 1000.0 / freq ;//ï¿½ï¿½Î» ms
 
-        //Êä³ö½á¹û
+        //ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½
         cout << n <<' '<< counter <<' '<< seconds<<' '<< seconds / counter << endl ;
        if(n==1000)
           step=1000;
